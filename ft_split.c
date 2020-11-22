@@ -6,7 +6,7 @@
 /*   By: abesombe <abesombe@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 22:35:27 by abesombe          #+#    #+#             */
-/*   Updated: 2020/11/22 16:27:47 by abesombe         ###   ########.fr       */
+/*   Updated: 2020/11/22 16:29:52 by abesombe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ char		**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	count_wd = ft_count_words(s, c);
-	printf("NB OF WORDS MALLOCED: %i\n", count_wd);
 	if (!(strs = (char **)malloc((count_wd + 1) * sizeof(char *))))
 		return (NULL);
 	return (ft_copy_to_strs(strs, s, c, count_wd));;
