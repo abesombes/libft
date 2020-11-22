@@ -6,82 +6,95 @@
 /*   By: abesombe <abesombe@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 22:35:27 by abesombe          #+#    #+#             */
-/*   Updated: 2020/11/20 18:39:33 by abesombe         ###   ########.fr       */
+/*   Updated: 2020/11/22 12:35:27 by abesombe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "libft.h"
 
-static int	ft_count_words(char const *s, char c)
+static int	nwords(char const *s1, char c)
 {
-	int i;
-	int j;
-	int count;
+	int		count;
+	int		nword;
 
-	i = 0;
 	count = 0;
-	while (s[i])
+	nword = 0;
+	if (*s1 == '\0')
+		return (0);
+	while (*s1)
 	{
-		while (s[i] && s[i] == c)
-			i++;
-		j = 0;
-		while (s[i + j] && s[i + j] != c)
-			j++;
-		if (j > 0)
+		if (*s1 == c)
+			nword = 0;
+		else if (nword == 0)
+		{
+			nword = 1;
 			count++;
-		i = i + j;
+		}
+		s1++;
 	}
 	return (count);
 }
 
-static char	*ft_strn_dup(const char *source, size_t size)
+static int	numchar(char const *s2, char c, int i)
 {
-	char	*dup;
-	size_t	i;
+	int		lenght;
 
-	if (!(dup = (char *)malloc(sizeof(char) * (size + 1))))
-		return (NULL);
-	i = 0;
-	while (i <= size)
+	lenght = 0;
+	while (s2[i] != c && s2[i])
 	{
-		dup[i] = source[i];
+		lenght++;
 		i++;
 	}
-	dup[i] = '\0';
-	return (dup);
+	return (lenght);
 }
 
-static char	**ft_free_memory(char **strs, int index)
+static char	**free_all(char const **dst, int j)
 {
-	while (index > 0)
-		free(strs[index--]);
-	free(strs);
+	while (j > 0)
+	{
+		j--;
+		free((void *)dst[j]);
+	}
+	free(dst);
 	return (NULL);
+}
+
+static char	**copy(char const *s, char **dst, char c, int l)
+{
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	while (s[i] && j < l)
+	{
+		k = 0;
+		while (s[i] == c)
+			i++;
+		dst[j] = (char *)malloc(sizeof(char) * numchar(s, c, i) + 1);
+		if (dst[j] == NULL)
+			return (free_all((char const **)dst, j));
+		while (s[i] && s[i] != c)
+			dst[j][k++] = s[i++];
+		dst[j][k] = '\0';
+		j++;
+	}
+	dst[j] = 0;
+	return (dst);
 }
 
 char		**ft_split(char const *s, char c)
 {
-	char	**strs;
-	int		i;
-	int		count_wd;
+	char	**dst;
+	int		l;
 
-	if (!s)
+	if (s == NULL)
 		return (NULL);
-	count_wd = ft_count_words(s, c);
-	if (!(strs = (char **)malloc((count_wd + 1) * sizeof(char *))))
+	l = nwords(s, c);
+	dst = (char **)malloc(sizeof(char *) * (l + 1));
+	if (dst == NULL)
 		return (NULL);
-	strs[count_wd] = 0;
-	count_wd = 0;
-	while (*s)
-	{
-		while (*s && *s == c)
-			s++;
-		i = 0;
-		while (*(s + i) && *(s + i) != c)
-			i++;
-		if (i > 0 && !(strs[count_wd++] = ft_strn_dup(s, i - 1)))
-			return (ft_free_memory(strs, count_wd - 1));
-		s = s + i;
-	}
-	return (strs);
+	return (copy(s, dst, c, l));
 }
