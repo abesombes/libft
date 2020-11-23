@@ -6,12 +6,11 @@
 /*   By: abesombe <abesombe@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 22:35:27 by abesombe          #+#    #+#             */
-/*   Updated: 2020/11/22 16:29:52 by abesombe         ###   ########.fr       */
+/*   Updated: 2020/11/23 18:23:41 by abesombe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 static int	ft_count_words(char const *s, char c)
 {
@@ -37,13 +36,13 @@ static int	ft_count_words(char const *s, char c)
 
 static char	**ft_free_memory(char **strs, int index)
 {
-	while (--index > 0)
+	while (--index >= 0)
 		free(strs[index]);
 	free(strs);
 	return (NULL);
 }
 
-static int ft_index_next_c(const char *src, char c, int limit)
+static int	ft_index_next_c(const char *src, char c, int limit)
 {
 	int i;
 
@@ -53,7 +52,7 @@ static int ft_index_next_c(const char *src, char c, int limit)
 		if (src[i] == c)
 			return (i);
 		i++;
-	}	
+	}
 	return (-1);
 }
 
@@ -95,5 +94,5 @@ char		**ft_split(char const *s, char c)
 	count_wd = ft_count_words(s, c);
 	if (!(strs = (char **)malloc((count_wd + 1) * sizeof(char *))))
 		return (NULL);
-	return (ft_copy_to_strs(strs, s, c, count_wd));;
+	return (ft_copy_to_strs(strs, s, c, count_wd));
 }
